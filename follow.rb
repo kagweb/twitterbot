@@ -7,6 +7,8 @@ require_relative 'twitter_bot/configuration' # 別途自分で用意
 class Follow
   include TwitterBot
   SEARCH_WORDS = '#中野梓生誕祭'
+  SEARCH_COUNT = 200
+  FOLLOW_COUNT = 50
 
   Twitter.configure do |config|
     config.consumer_key       = Configuration.consumer_key
@@ -23,12 +25,12 @@ class Follow
   friend_ids = friends.map(&:id)
 
   follow_count = 0
-  Twitter.search("#{SEARCH_WORDS} -rt", lang: 'ja', result_type: 'recent', count: 500).results.map do |status|
+  Twitter.search("#{SEARCH_WORDS} -rt", lang: 'ja', result_type: 'recent', count: SEARCH_COUNT).results.map do |status|
     unless friend_ids.include?(status.id)
       dignikjp.follow(status.id)
       count += 1
       sleep 3
     end
-    break if follow_count > 100
+    break if follow_count > FOLLOW_COUNT
   end
 end
