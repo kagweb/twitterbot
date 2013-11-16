@@ -26,11 +26,14 @@ class Follow
 
   follow_count = 0
   Twitter.search("#{SEARCH_WORDS} -rt", lang: 'ja', result_type: 'recent', count: SEARCH_COUNT).results.map do |status|
-    unless friend_ids.include?(status.id)
-      dignikjp.follow(status.id)
-      count += 1
-      sleep 3
+    begin
+      unless friend_ids.include?(status.id)
+        dignikjp.follow(status.id)
+        count += 1
+        sleep 3
+      end
+      break if follow_count > FOLLOW_COUNT
+    rescue Twitter::Error::NotFound
     end
-    break if follow_count > FOLLOW_COUNT
   end
 end
