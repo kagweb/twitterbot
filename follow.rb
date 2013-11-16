@@ -1,13 +1,13 @@
 # coding: utf-8
 require 'rubygems'
-require 'active_support/all'
+#require 'active_support/all'
 require 'twitter'
 require_relative 'twitter_bot/configuration' # 別途自分で用意
 
 class Follow
   include TwitterBot
   SEARCH_WORDS = '#アニメ好きな人RT'
-  SEARCH_COUNT = 200
+  SEARCH_COUNT = 100
   FOLLOW_COUNT = 50
 
   Twitter.configure do |config|
@@ -30,7 +30,7 @@ class Follow
         unless friend_ids.include?(status.user.id)
           client.follow(status.user.id)
           follow_count += 1
-          sleep 5
+          sleep 10
           puts "Follow #{status.user.screen_name}"
         end
         break if follow_count > FOLLOW_COUNT
