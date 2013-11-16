@@ -22,6 +22,7 @@ class Follow
 
   begin
     friend_ids = Twitter.friends(Configuration.bot_id).map(&:id)
+    puts 'get friend ids'
     # friend_ids = client.friends.map(&:id) # 多分API重い…？
     follow_count = 0
     Twitter.search("#{SEARCH_WORDS} -rt", lang: 'ja', result_type: 'recent', count: SEARCH_COUNT).results.map do |status|
@@ -30,7 +31,7 @@ class Follow
           client.follow(status.user.id)
           follow_count += 1
           sleep 5
-          puts "Follow #{status.id}"
+          puts "Follow #{status.user.screen_name}"
         end
         break if follow_count > FOLLOW_COUNT
       rescue Twitter::Error::NotFound
