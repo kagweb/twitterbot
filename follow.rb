@@ -38,6 +38,5 @@ class Follow
     end
   rescue Twitter::Error::TooManyRequests
     puts 'Too many requests. Just a moment please.'
-    return
   end
 end
