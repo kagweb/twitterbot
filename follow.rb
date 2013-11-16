@@ -26,8 +26,8 @@ class Follow
     follow_count = 0
     Twitter.search("#{SEARCH_WORDS} -rt", lang: 'ja', result_type: 'recent', count: SEARCH_COUNT).results.map do |status|
       begin
-        unless friend_ids.include?(status.id)
-          client.follow(status.id)
+        unless friend_ids.include?(status.user.id)
+          client.follow(status.user.id)
           follow_count += 1
           sleep 5
           puts "Follow #{status.id}"
