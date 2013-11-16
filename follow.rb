@@ -29,7 +29,7 @@ class Follow
     begin
       unless friend_ids.include?(status.id)
         dignikjp.follow(status.id)
-        count += 1
+        follow_count += 1
         sleep 3
       end
       break if follow_count > FOLLOW_COUNT
