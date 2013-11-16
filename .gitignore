@@ -5,7 +5,7 @@
 #   git config --global core.excludesfile ~/.gitignore_global
 
 # Ignore config file
-config.rb
+./twitter_bot/configuration.rbg
 
 # Ignore schema.rb
 /db/schema.rb
@@ -54,4 +54,3 @@ Gemfile.lock
 
 # Ignore "Icon\r"
 Icon^M^M
-
