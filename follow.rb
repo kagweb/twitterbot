@@ -1,12 +1,34 @@
 # coding: utf-8
+require 'rubygems'
+require 'active_support/all'
 require 'twitter'
-require './config.rb' # 別途自分で用意
+require_relative 'twitter_bot/configuration' # 別途自分で用意
 
 class Follow
+  include TwitterBot
+  SEARCH_WORDS = '#中野梓生誕祭'
+
   Twitter.configure do |config|
-    config.consumer_key       = Config.consumer_key
-    config.consumer_secret    = Config.consumer_secret
-    config.oauth_token        = Config.access_token
-    config.oauth_token_secret = Config.oauth_token_secret
+    config.consumer_key       = Configuration.consumer_key
+    config.consumer_secret    = Configuration.consumer_secret
+  end
+
+  dignikjp = Twitter::Client.new(
+    oauth_token: Configuration.access_token,
+    oauth_token_secret: Configuration.oauth_token_secret
+  )
+
+  friends = Twitter.friends(Configuration.bot_id)
+  # friends = dignikjp.friends
+  friend_ids = friends.map(&:id)
+
+  follow_count = 0
+  Twitter.search("#{SEARCH_WORDS} -rt", lang: 'ja', result_type: 'recent', count: 500).results.map do |status|
+    unless friend_ids.include?(status.id)
+      dignikjp.follow(status.id)
+      count += 1
+      sleep 3
+    end
+    break if follow_count > 100
   end
 end
