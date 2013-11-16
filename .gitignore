@@ -5,7 +5,7 @@
 #   git config --global core.excludesfile ~/.gitignore_global
 
 # Ignore config file
-./twitter_bot/configuration.rbg
+./twitter_bot/configuration.rb
 
 # Ignore schema.rb
 /db/schema.rb
