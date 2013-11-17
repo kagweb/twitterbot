@@ -1,6 +1,6 @@
 # coding: utf-8
 require 'rubygems'
-require 'active_support/all'
+#require 'active_support/all'
 require 'twitter'
 require_relative 'twitter_bot/configuration' # 別途自分で用意
 
@@ -30,7 +30,7 @@ class Follow
         unless friend_ids.include?(status.user.id)
           client.follow(status.user.id)
           follow_count += 1
-          sleep 5
+          sleep 10
           puts "Follow #{status.user.screen_name}"
         end
         break if follow_count > FOLLOW_COUNT
