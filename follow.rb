@@ -6,7 +6,7 @@ require_relative 'twitter_bot/configuration' # 別途自分で用意
 
 class Follow
   include TwitterBot
-  SEARCH_WORDS = '#アニメ好きな人RT'
+  SEARCH_WORDS = '#橘真琴聖誕祭 -rt'
   SEARCH_COUNT = 200
   FOLLOW_COUNT = 50
 
@@ -21,7 +21,7 @@ class Follow
   )
 
   begin
-    friend_ids = Twitter.friends(Configuration.bot_id).map(&:id)
+    friend_ids = Twitter.friend_ids(Configuration.bot_id) #.map(&:id)
     puts 'get friend ids'
     # friend_ids = client.friends.map(&:id) # 多分API重い…？
     follow_count = 0
