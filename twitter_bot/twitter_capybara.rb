@@ -1,10 +1,9 @@
 # coding: utf-8
 require 'rubygems'
-require 'active_support'
+require 'active_support/all'
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/poltergeist'
-require 'pp'
 
 module TwitterCapybara
   include Capybara::DSL
@@ -23,7 +22,7 @@ module TwitterCapybara
     Capybara.ignore_hidden_elements = true
 
     LOGIN_URL = 'https://twitter.com/login'
-    HOME_URL = 'https://twitter.com'
+    HOME_URL = 'https://twitter.com/'
 
     # ログインフォームについての処理
     def self.login(screen_name, password)
@@ -68,6 +67,20 @@ module TwitterCapybara
           content.first('.js-close').click
         end
         i += 1
+      end
+    end
+
+    def self.unfollow(screen_name)
+      Capybara.visit("#{HOME_URL}#{screen_name}")
+      sleep 3
+      username = Capybara.first('.profile-page-header').first('.profile-header-inner').first('.profile-card-inner').first('h2.username')
+      if username.present? && username.first('.follow-status').blank?
+        Capybara.first('.profile-page-header').first('.profile-banner-footer').first('.default-footer').first('.UserActions').first('.following').try(:first, '.js-follow-btn').try(:click)
+        sleep (5 + rand(10))
+        return true
+      else
+        sleep (5 + rand(10))
+        return false
       end
     end
   end
