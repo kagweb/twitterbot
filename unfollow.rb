@@ -18,8 +18,9 @@ class UnFollow
 
   begin
     friends = Twitter.friends(Configuration.bot_id)
-    screen_names = []
+    screen_names = [] # ["kag_web", "Ryohlan", "watkc", "takumi_lost", "yuha_yuhan"]
     friends.users.reverse.map { |friend| screen_names << friend.screen_name if friend.following.nil? }
+    puts 'get screen names!'
   rescue Twitter::Error::TooManyRequests
     puts 'Too many requests. Just a moment please.'
   end
@@ -31,4 +32,5 @@ class UnFollow
     unfollow_count += 1 if Bot.unfollow(screen_name)
     break if unfollow_count > UNFOLLOW_COUNT
   end
+  puts 'unfollow task done!'
  end
