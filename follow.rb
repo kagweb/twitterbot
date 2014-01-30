@@ -3,7 +3,7 @@ require 'rubygems'
 require 'active_support/all'
 require 'twitter'
 require_relative 'twitter_bot/configuration' # 別途自分で用意
-require_relative 'twitter_bot/twitter_capybara' # 別途自分で用意
+require_relative 'twitter_bot/twitter_capybara'
 
 class Follow
   include TwitterBot
