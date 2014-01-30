@@ -1,5 +1,4 @@
 # coding: utf-8
-#!/usr/bin/ruby
 require 'rubygems'
 require 'active_support'
 require 'capybara'

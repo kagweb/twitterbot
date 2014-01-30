@@ -1,6 +1,6 @@
 # coding: utf-8
 require 'rubygems'
-require 'active_support/all'
+require 'active_support'
 require 'twitter'
 require_relative 'twitter_bot/configuration' # 別途自分で用意
 require_relative 'twitter_bot/twitter_capybara'
