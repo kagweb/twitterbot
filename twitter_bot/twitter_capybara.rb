@@ -4,6 +4,8 @@ require 'active_support/all'
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/poltergeist'
+require "selenium/webdriver"
+require 'pp'
 
 module TwitterCapybara
   include Capybara::DSL
@@ -16,17 +18,17 @@ module TwitterCapybara
       config.visible_text_only = true
     end
 
+    Capybara.register_driver :poltergeist do |app|
+      driver = Capybara::Poltergeist::Driver.new(app, js_errors: false, timeout: 10000, phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes', '--ssl-protocol=any'])
+    end
+
     Capybara.run_server = false
     Capybara.default_driver = :poltergeist
     Capybara.javascript_driver = :poltergeist
     Capybara.ignore_hidden_elements = true
 
-    Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, js_errors: false)
-    end
-
-    LOGIN_URL = 'https://twitter.com/login'
     HOME_URL = 'https://twitter.com/'
+    LOGIN_URL = "#{HOME_URL}login"
 
     # ログインフォームについての処理
     def self.login(screen_name, password)

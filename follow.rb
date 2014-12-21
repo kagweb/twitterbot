@@ -15,7 +15,7 @@ class Follow
 
   Bot.login(Configuration.bot_screen_name, Configuration.bot_password)
   Bot.search("#{SEARCH_WORDS} -rt")
-  Bot.follow(FOLLOW_COUNT)
+  # Bot.follow(FOLLOW_COUNT)
 
   puts 'follow task done!'
 end
