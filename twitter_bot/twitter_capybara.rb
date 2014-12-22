@@ -4,6 +4,8 @@ require 'active_support/all'
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/poltergeist'
+require "selenium/webdriver"
+require 'pp'
 
 module TwitterCapybara
   include Capybara::DSL
@@ -16,17 +18,18 @@ module TwitterCapybara
       config.visible_text_only = true
     end
 
+    Capybara.register_driver :poltergeist do |app|
+      driver = Capybara::Poltergeist::Driver.new(app, js_errors: false, timeout: 10000, phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes', '--ssl-protocol=any'])
+    end
+
     Capybara.run_server = false
+    # Capybara.default_driver = :selenium
     Capybara.default_driver = :poltergeist
     Capybara.javascript_driver = :poltergeist
     Capybara.ignore_hidden_elements = true
 
-    Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, js_errors: false)
-    end
-
-    LOGIN_URL = 'https://twitter.com/login'
     HOME_URL = 'https://twitter.com/'
+    LOGIN_URL = "#{HOME_URL}login"
 
     # ログインフォームについての処理
     def self.login(screen_name, password)
@@ -93,6 +96,52 @@ module TwitterCapybara
         puts 'not unfollow'
         sleep (5 + rand(10))
         return false
+      end
+    end
+
+    def self.list_in(count = 0, word = 'アニメ好きなクラスタ')
+      i = 0
+      follow_count = 0
+      while true
+        break if follow_count > count
+        tweet = Capybara.first("#stream-items-id").all('li.js-stream-item')[i].try(:first, '.js-stream-tweet')
+        if tweet.present? && tweet['data-you-follow'] != 'true'
+          tweet.try(:first, '.content').try(:first, '.stream-item-header').try(:first, '.js-user-profile-link').try(:click)
+          sleep (2 + rand(3))
+          dropdown = Capybara.first('#profile_popup-body').first('.UserActions-moreActions').first('.user-dropdown').try(:click)
+          sleep (2 + rand(3))
+          Capybara.first('.list-text').try(:click)
+          sleep (2 + rand(3))
+
+          # 登録済みのリスト名一覧取得
+          list_names = []
+          Capybara.all('ul.list-membership-container').each do |list|
+            list_names << list.text
+          end
+
+          # リストが無ければ作成
+          unless list_names.include?(word)
+            # list_content = Capybara.first('.create-a-list').try(:click)
+            # sleep (2 + rand(3))
+            # Capybara.first('#list-name').set word
+            # Capybara.first('.update-list-button').try(:click)
+          end
+
+          # リスト登録
+          Capybara.all('ul.list-membership-container').each do |list|
+            if list.text == word && list.find('.membership-checkbox')['checked'] != 'true'
+              list.find('.membership-checkbox').try(:click)
+              puts 'list in!'
+            end
+          end
+          sleep (5 + rand(10))
+          follow_count += 1
+          Capybara.first('.js-close').click
+        else
+          puts 'not list in'
+          sleep (5 + rand(10))
+        end
+        i += 1
       end
     end
   end
