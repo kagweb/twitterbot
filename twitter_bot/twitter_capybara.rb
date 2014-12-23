@@ -55,6 +55,7 @@ module TwitterCapybara
 
     # 検索フォームについての処理
     def self.search(words)
+      puts "search start : #{words}"
       Capybara.visit(HOME_URL)
       sleep 3
       # 検索ワードを自動入力
@@ -108,11 +109,12 @@ module TwitterCapybara
       end
     end
 
-    def self.list_in(count = 0, word = 'アニメ好きなクラスタ')
+    def self.list_in(count, list_name)
       i = 0
-      follow_count = 0
+      list_in_count = 0
+      created = false
       while true
-        break if follow_count > count
+        break if list_in_count > count
         tweet = Capybara.first("#stream-items-id").all('li.js-stream-item')[i].try(:first, '.js-stream-tweet')
         if tweet.present? && tweet['data-you-follow'] != 'true'
           tweet.try(:first, '.content').try(:first, '.stream-item-header').try(:first, '.js-user-profile-link').try(:click)
@@ -122,29 +124,24 @@ module TwitterCapybara
           Capybara.first('.list-text').try(:click)
           sleep (2 + rand(3))
 
-          # 登録済みのリスト名一覧取得
-          list_names = []
-          Capybara.all('ul.list-membership-container').each do |list|
-            list_names << list.text
-          end
-
           # リストが無ければ作成
-          unless list_names.include?(word)
+          if !(created || Capybara.find('ul.list-membership-container').find('li', text: list_name).present?)
             list_content = Capybara.first('.create-a-list').try(:click)
             sleep (2 + rand(3))
-            Capybara.first('#list-name').set word
+            Capybara.first('#list-name').set list_name
             Capybara.first('.update-list-button').try(:click)
+            puts "create #{list_name} list!"
           end
+          created = true
 
           # リスト登録
-          Capybara.all('ul.list-membership-container').each do |list|
-            if list.text == word && !(list.find('.membership-checkbox')['checked'] == 'true' || list.find('.membership-checkbox')['checked'] == true)
-              list.find('.membership-checkbox').try(:click)
-              puts 'list in!'
-            end
+          list = Capybara.find('ul.list-membership-container').find('li', text: list_name)
+          if list.text == list_name && !(list.find('.membership-checkbox')['checked'] == 'true' || list.find('.membership-checkbox')['checked'] == true)
+            list.find('.membership-checkbox').try(:click)
+            puts "list in #{list_name}!"
           end
           sleep (5 + rand(10))
-          follow_count += 1
+          list_in_count += 1
           Capybara.first('.js-close').click
         else
           puts 'not list in'
