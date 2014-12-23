@@ -130,15 +130,15 @@ module TwitterCapybara
 
           # リストが無ければ作成
           unless list_names.include?(word)
-            # list_content = Capybara.first('.create-a-list').try(:click)
-            # sleep (2 + rand(3))
-            # Capybara.first('#list-name').set word
-            # Capybara.first('.update-list-button').try(:click)
+            list_content = Capybara.first('.create-a-list').try(:click)
+            sleep (2 + rand(3))
+            Capybara.first('#list-name').set word
+            Capybara.first('.update-list-button').try(:click)
           end
 
           # リスト登録
           Capybara.all('ul.list-membership-container').each do |list|
-            if list.text == word && list.find('.membership-checkbox')['checked'] != 'true'
+            if list.text == word && (list.find('.membership-checkbox')['checked'] != 'true' || list.find('.membership-checkbox')['checked'] != true)
               list.find('.membership-checkbox').try(:click)
               puts 'list in!'
             end
