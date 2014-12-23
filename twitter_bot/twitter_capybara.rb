@@ -138,7 +138,7 @@ module TwitterCapybara
 
           # リスト登録
           Capybara.all('ul.list-membership-container').each do |list|
-            if list.text == word && (list.find('.membership-checkbox')['checked'] != 'true' || list.find('.membership-checkbox')['checked'] != true)
+            if list.text == word && !(list.find('.membership-checkbox')['checked'] == 'true' || list.find('.membership-checkbox')['checked'] == true)
               list.find('.membership-checkbox').try(:click)
               puts 'list in!'
             end
