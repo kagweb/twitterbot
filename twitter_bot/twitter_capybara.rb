@@ -1,4 +1,13 @@
 # coding: utf-8
+
+# gem install activesupport
+# gem install twitter
+# gem install capybara
+# gem install poltergeist
+# gem install selenium
+# gem install selenium-webdriver
+# and install phantomjs
+
 require 'rubygems'
 require 'active_support/all'
 require 'capybara'
