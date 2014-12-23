@@ -139,9 +139,9 @@ module TwitterCapybara
           if list.text == list_name && !(list.find('.membership-checkbox')['checked'] == 'true' || list.find('.membership-checkbox')['checked'] == true)
             list.find('.membership-checkbox').try(:click)
             puts "list in #{list_name}!"
+            list_in_count += 1
           end
           sleep (5 + rand(10))
-          list_in_count += 1
           Capybara.first('.js-close').click
         else
           puts 'not list in'
